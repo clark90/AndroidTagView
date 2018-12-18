@@ -1,0 +1,30 @@
+apply plugin: 'maven'
+
+//配置maven build
+uploadArchives {
+    repositories.mavenDeployer {
+        name = 'mavenCentralReleaseDeployer'
+        pom {
+            version = maven_pom_version
+            artifactId = maven_pom_artifact_id
+            groupId = maven_pom_group_id
+            packaging = maven_pom_packaging
+            name = maven_pom_name
+            description = maven_pom_description
+        }
+        repository(url: maven_url + pom.groupId) {
+            authentication(userName: maven_user_name, password: maven_password)
+        }
+
+    }
+}
+
+//aar 打包支持源码查看
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives sourcesJar
+}
